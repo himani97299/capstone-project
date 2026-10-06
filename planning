@@ -1,0 +1,73 @@
+CAPSTONE PROJECT
+Project Planning
+
+
+# Objective
+
+The objective of this project is to perform an authorized penetration test against the intentionally vulnerable Metasploitable 2 virtual machine using Kali Linux.
+The project will be performed in an isolated virtual laboratory consisting of two virtual machines:
+
+| System   | Operating System | Role                            | IP Address     |
+| -------- | ---------------- | ------------------------------- | -------------- |
+| Attacker | Kali Linux       | Penetration-testing             | 10.0.2.15/24   |
+| Target   | Metasploitable 2 | Intentionally vulnerable target | 192.168.56.103 |
+
+#Scope
+
+The scope of the assessment includes:
+
+* Metasploitable 2 virtual machine
+* Web applications hosted on the target
+* Network services exposed by the target
+* Evidence and screenshot collection
+* Risk assessment
+* Mitigation recommendations
+* Controlled incident-response simulation
+
+#Tools 
+
+| Tool                 | Purpose                                          |
+| -------------------- | ------------------------------------------------ |
+| Kali Linux           | Main penetration-testing platform                |
+| Metasploitable 2     | Intentionally vulnerable target                  |
+| Nmap                 | Network discovery                                |
+| Burp Suite           | Web application analysis and testing             |
+| Metasploit Framework | Controlled vulnerability validation/exploitation |
+| Web Browser          | Accessing and testing web applications           |
+| Netcat               | Network/service verification where required      |
+| Terminal             | Command execution and evidence collection        |
+| Screenshot utility   | Documentation of testing evidence                |
+| VirtualBox/VMware    | Virtual laboratory environment                   |
+
+#Network Diagram 
+                 ISOLATED VIRTUAL LAB
+                        
+        ┌─────────────────────────────┐
+        │         Kali Linux          │
+        │     Penetration Tester      │
+        │                             │
+        │ IP: 10.0.2.15/24            │
+        │                             │
+        │ Nmap | Burp Suite |         │
+        │ Metasploit | Browser        │
+        └──────────────┬──────────────┘
+                       │
+                       │  Security Testing
+                       │
+                Virtual Network
+                       │
+                       ▼
+        ┌─────────────────────────────┐
+        │       Metasploitable 2      │
+        │      Vulnerable Target      │
+        │                             │
+        │ IP: 192.168.56.103          │
+        │                             │
+        │ Web Applications            │
+        │ Network Services             │
+        └─────────────────────────────┘
+
+
+
+
+   
