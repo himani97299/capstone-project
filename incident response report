@@ -1,0 +1,176 @@
+# Incident Response Report — DVWA Web Application Security Lab
+
+**Project:** Web Application Penetration Testing and Vulnerability Assessment
+**Incident ID:** IR-001
+**Environment:** Kali Linux and Metasploitable 2
+**Application:** Damn Vulnerable Web Application (DVWA)
+**Assessment Type:** Authorized Security Testing
+**Status:** Investigation documented; containment and recovery verification pending
+
+---
+
+## 1. Executive Summary
+
+This incident response simulation was conducted as part of a web application penetration-testing capstone project using Kali Linux and Metasploitable 2.
+
+During the assessment, Apache access logs were examined to identify requests made to DVWA. The logs contained requests to the Brute Force and Command Execution modules, originating from the testing machine.
+
+The observed activity was reviewed to demonstrate basic incident detection, investigation, containment planning, remediation recommendations, and recovery procedures.
+
+The available evidence confirms that the web server received requests from the testing environment. However, the logs alone do not establish that a successful compromise occurred. Containment and recovery were not independently verified during this exercise.
+
+## 2. Lab Environment
+
+| Component                | Details                       |
+| ------------------------ | ----------------------------- |
+| Attacker/testing machine | Kali Linux                    |
+| Target machine           | Metasploitable 2              |
+| Web application          | DVWA                          |
+| Target IP                | `192.168.56.103`              |
+| Observed source IP       | `192.168.56.101`              |
+| Log source               | Apache access log             |
+| Log location             | `/var/log/apache2/access.log` |
+| Web server               | Apache                        |
+| DVWA security level      | Low                           |
+
+All testing was performed within the intended educational laboratory environment.
+
+## 3. Incident Description
+
+The Apache access logs contained requests to the following application endpoints:
+
+* `/dvwa/vulnerabilities/brute/`
+* `/dvwa/vulnerabilities/exec/`
+
+The observed requests included HTTP GET and POST methods. The recorded HTTP status was `200`, indicating that the server returned a successful HTTP response.
+
+These requests were treated as security-relevant activity requiring investigation. An HTTP `200` response does not independently confirm that an attack succeeded or that the target was compromised.
+
+## 4. Detection and Evidence
+
+### 4.1 Detection Method
+
+The Apache access log was inspected using the following command:
+
+```bash
+sudo tail -n 50 /var/log/apache2/access.log
+```
+
+The relevant DVWA entries were reviewed to identify the requested endpoints, source address, timestamps, and HTTP response codes.
+
+### 4.2 Evidence Summary
+
+| Evidence Field      | Observation                                                               |
+| ------------------- | ------------------------------------------------------------------------- |
+| Source IP           | `192.168.56.101`                                                          |
+| Target IP           | `192.168.56.103`                                                          |
+| Requested endpoints | DVWA Brute Force and Command Execution                                    |
+| HTTP methods        | GET and POST                                                              |
+| HTTP response       | `200`                                                                     |
+| Log timestamps      | `09/Oct/2026`, approximately `01:29:51–01:30:23`, as displayed in the log |
+| Evidence source     | Apache access-log output                                                  |
+
+**Timestamp note:** The original log displays the timezone offset `-0400`. The timestamps above are reproduced as displayed by the system and have not been converted to another timezone.
+
+Sensitive values, including credentials that may appear in HTTP query strings, should be redacted before log excerpts are published publicly.
+
+## 5. Incident Response Procedure
+
+### Phase 1: Detection
+
+Apache access logs were reviewed to identify web requests associated with DVWA's vulnerable modules.
+
+**Result:** Relevant application requests were observed in the logs.
+
+### Phase 2: Investigation
+
+The requests were examined to determine their source, destination, HTTP method, requested application endpoint, and response status.
+
+The evidence showed requests from the testing machine to the target web application.
+
+**Result:** Suspicious or security-relevant activity was identified for investigation. Successful exploitation was not established by the available evidence.
+
+### Phase 3: Containment
+
+A temporary Apache service shutdown was attempted as a containment exercise:
+
+```bash
+sudo /etc/init.d/apache2 stop
+```
+
+Stopping Apache would make DVWA and other websites hosted by that Apache service temporarily unavailable.
+
+**Result:** The service state and resulting loss of web access were not independently verified. Therefore, containment remains unconfirmed.
+
+### Phase 4: Eradication and Remediation
+
+The following remediation measures are recommended for the vulnerabilities assessed during the project:
+
+1. **SQL Injection:** Replace dynamically constructed SQL queries with parameterized queries or prepared statements.
+2. **Cross-Site Scripting:** Apply context-aware output encoding and appropriate input validation.
+3. **OS Command Injection:** Avoid shell execution with user-controlled input; use safe APIs and strict validation.
+4. **File Inclusion:** Use an allowlist of permitted files and avoid using untrusted input in file paths.
+5. **File Upload:** Validate file content and type, generate safe filenames, and store uploads outside executable web directories.
+6. **Brute Force:** Apply login rate limiting, progressive delays, strong password policies, and security monitoring.
+7. **Logging:** Monitor suspicious requests and protect logs from unauthorized access or modification.
+
+These are recommended corrective actions. They should not be interpreted as fixes already applied or verified.
+
+### Phase 5: Recovery
+
+The Apache service should be started again after the containment exercise:
+
+```bash
+sudo /etc/init.d/apache2 start
+```
+
+Recovery should then be verified by confirming that Apache is running and that DVWA is accessible from Kali Linux.
+
+**Result:** Recovery verification remains pending until service status and application access have been confirmed.
+
+## 6. Lessons Learned
+
+* Apache access logs provide useful evidence for investigating web application activity.
+* Source IPs, timestamps, requested endpoints, HTTP methods, and status codes help establish an incident timeline.
+* A successful HTTP response does not prove that an attack succeeded.
+* Containment actions must be verified before they are reported as successful.
+* Vulnerability remediation should be followed by retesting.
+* Sensitive information must be redacted before logs are shared publicly.
+* Intentionally vulnerable applications should remain within an isolated, authorized testing environment.
+
+## 7. Recommendations
+
+The following improvements are recommended for future assessments:
+
+* Apply and verify fixes for identified vulnerabilities.
+* Retest each vulnerability after remediation.
+* Establish a repeatable process for reviewing security logs.
+* Record containment and recovery timestamps.
+* Preserve relevant evidence and redact secrets.
+* Use an isolated virtual network for the lab.
+* Maintain backups or snapshots before making changes to vulnerable systems.
+
+## 8. Conclusion
+
+This exercise demonstrated the initial stages of incident response in a controlled web application testing environment. Apache access logs provided evidence of requests to vulnerable DVWA modules, enabling investigation of the observed activity.
+
+The exercise also established a containment procedure and identified remediation measures for common web application vulnerabilities.
+
+Further verification is required before claiming that containment, remediation, or recovery was successfully completed.
+
+## 9. Tools Used
+
+* Kali Linux
+* Metasploitable 2
+* DVWA
+* Apache access logs
+* Linux terminal
+* Firefox web browser
+* Nmap
+* Burp Suite
+
+## 10. Scope and Authorization
+
+This report documents an educational security assessment performed against an intentionally vulnerable virtual machine. The findings and recommendations are intended for learning, vulnerability remediation, and incident-response practice.
+
+No conclusions in this report should be interpreted as evidence of compromise of any external system.
